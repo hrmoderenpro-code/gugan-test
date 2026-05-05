@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUGAN | Enterprise HRIS Infrastructure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-green: #22c55e;
+            --brand-green-glow: rgba(34, 197, 94, 0.15);
+            --bg-dark: #0a0f0b;
+            --bg-card: rgba(18, 24, 20, 0.6);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            color: var(--text-main);
+            padding: 100px 0;
+            min-height: 100vh;
+        }
+
+        .features-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            gap: 80px;
+            position: relative;
+        }
+
+        /* LEFT SIDE: Vertical Tab Navigation */
+        .features-sidebar {
+            flex: 0 0 300px;
+            position: sticky;
+            top: 60px;
+            height: fit-content;
+        }
+
+        .section-label {
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--brand-green);
+            margin-bottom: 32px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .features-tabs {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .tab-item {
+            padding: 14px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-left: 2px solid transparent;
+        }
+
+        .tab-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-item.active {
+            color: var(--brand-green);
+            background: rgba(34, 197, 94, 0.05);
+            border-left-color: var(--brand-green);
+        }
+
+        /* RIGHT SIDE: Content Area */
+        .features-content-area {
+            flex: 1;
+        }
+
+        .feature-category {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .feature-category.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-info {
+            margin-bottom: 48px;
+        }
+
+        .category-info h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .category-info p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* Feature Groups */
+        .feature-group {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .group-label {
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: block;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
+        }
+
+        /* Feature Items */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 28px;
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition);
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(18, 24, 20, 0.8);
+            box-shadow: 0 10px 40px var(--brand-green-glow);
+        }
+
+        .feature-icon-box {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-green);
+        }
+
+        .feature-icon-box svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5;
+        }
+
+        .feature-details h4 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .feature-details p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Highlight vs Secondary */
+        .feature-card.highlight {
+            grid-column: span 2;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(18, 24, 20, 0.6) 100%);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .feature-card.highlight .feature-icon-box {
+            width: 56px;
+            height: 56px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 12px;
+        }
+
+        .feature-card.highlight h4 {
+            font-size: 1.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-container {
+                flex-direction: column;
+                gap: 40px;
+                padding: 0 24px;
+            }
+            .features-sidebar {
+                position: relative;
+                top: 0;
+                width: 100%;
+            }
+            .features-tabs {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+            .tab-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 2px solid transparent;
+            }
+            .tab-item.active {
+                border-bottom-color: var(--brand-green);
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .feature-card.highlight {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="features-section">
+        <div class="features-container">
+            <!-- LEFT SIDE: Sticky Nav -->
+            <aside class="features-sidebar">
+                <span class="section-label">Enterprise Modules</span>
+                <ul class="features-tabs">
+                    <li class="tab-item active" onclick="switchCategory('attendance')">Attendance</li>
+                    <li class="tab-item" onclick="switchCategory('employee')">Core Employee</li>
+                    <li class="tab-item" onclick="switchCategory('ess')">Self Service</li>
+                    <li class="tab-item" onclick="switchCategory('payroll')">Payroll Engine</li>
+                    <li class="tab-item" onclick="switchCategory('performance')">Performance</li>
+                    <li class="tab-item" onclick="switchCategory('recruitment')">Recruitment</li>
+                    <li class="tab-item" onclick="switchCategory('automation')">Integrations</li>
+                </ul>
+            </aside>
+
+            <!-- RIGHT SIDE: Content -->
+            <div class="features-content-area">
+
+                <!-- 1. Attendance -->
+                <div id="attendance" class="feature-category active">
+                    <div class="category-info">
+                        <h2>Attendance Management</h2>
+                        <p>Enterprise-grade tracking system with AI-powered security and real-time biometric synchronization.</p>
+                    </div>
+                    <div class="feature-group">
+                        <div>
+                            <span class="group-label">Core Biometrics</span>
+                            <div class="feature-grid">
+                                <div class="feature-card highlight">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3c1.72 0 3.347.433 4.774 1.2a10 10 0 014.532 12.358m-4.532-12.358a10.003 10.003 0 013.44 2.04l.054.09m-4.208 11.774a10.003 10.003 0 01-3.44-2.04l-.054-.09m-4.208-11.774a10 10 0 014.208 11.774m0-11.774V9m0 11.774V21" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>Fingerprint Integration (Real-time)</h4>
+                                        <p>Direct connectivity with biometric hardware. Attendance data flows into the system instantly without manual sync.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>AI Face & Smile Recognition</h4>
+                                        <p>Fraud-proof attendance using geolocation and facial sentiment analysis.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>Mobile GPS Attendance</h4>
+                                        <p>Secure clock-in via mobile devices with radius-based geofencing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="group-label">Operations & Tracking</span>
+                            <div class="feature-grid">
+                                <div class="feature-card">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>Shifting Management</h4>
+                                        <p>Automated shift rotations and complex schedule handling.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>Overtime Control</h4>
+                                        <p>Policy-based overtime management and automated approval.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>Time Off & Cuti</h4>
+                                        <p>Advanced leave entitlement tracking and workflow.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon-box">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    </div>
+                                    <div class="feature-details">
+                                        <h4>KPI Attendance</h4>
+                                        <p>Convert punctuality metrics into employee performance scores.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Core Employee -->
+                <div id="employee" class="feature-category">
+                    <div class="category-info">
+                        <h2>Employee Management</h2>
+                        <p>Centralize your workforce intelligence with secure data structures and smart organizational mapping.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card highlight">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Employee & Org Structure</h4>
+                                <p>Dynamic organizational mapping with detailed profiles and employment history.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21a3.745 3.745 0 01-3.068-.953 3.745 3.745 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.745 3.745 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Smart Approval Flow</h4>
+                                <p>Multi-level, logic-based approval routing for enterprise operations.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6h1.5m-1.5 3h1.5m-1.5 3h1.5M9 15.75h1.5m-1.5 3h1.5m3-3h1.5m-1.5 3h1.5" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Multi Branch Support</h4>
+                                <p>Consolidated management of multiple subsidiaries and branch locations.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3h7.5M8.25 6.75h1.5M4.5 9h15M4.5 12h15m-15 3h15m-15 3h15" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Document Management</h4>
+                                <p>Secure digital vault for employee legal documents and certifications.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. ESS -->
+                <div id="ess" class="feature-category">
+                    <div class="category-info">
+                        <h2>Employee Self-Service</h2>
+                        <p>Decentralize administrative tasks by giving employees secure mobile tools to manage their own requests.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Mobile Requests</h4>
+                                <p>Submit leave, overtime, and reimbursement claims via mobile app.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Payslip Downloads</h4>
+                                <p>Instant access and download of historical monthly payslips.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Payroll -->
+                <div id="payroll" class="feature-category">
+                    <div class="category-info">
+                        <h2>Payroll Engine</h2>
+                        <p>Robust calculation engine designed for complex Indonesian tax laws and enterprise compensation structures.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card highlight">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75m0 1.5v.75m0 1.5v.75m0 1.5V15m-1.5-1.5h1.5m-1.5-1.5h1.5m-1.5-1.5h1.5m-1.5-1.5h1.5M9 9h.008v.008H9V9zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm4.125 4.5h.008v.008h-.008V13.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM14.25 9h.008v.008h-.008V9zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM12 12.75h.008v.008H12v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM12 15.75h.008v.008H12v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM9.75 15.75h.008v.008h-.008v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM2.25 16.05c0-3.15 2.1-6.15 5.25-6.15 1.65 0 3.15.9 4.2 2.1 1.2 1.35 1.5 3 1.5 4.05v.3H2.25v-.3z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Salary Adjustment System</h4>
+                                <p>Automated salary increments based on performance reviews, KPI achievement, or periodic company policy updates.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-3-3V18m-3-3V18M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Tax & TER Calculation</h4>
+                                <p>Precise PPh 21 calculations following latest TER (Tarif Efektif Rata-rata) compliance.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>BPJS & Loan Mgmt</h4>
+                                <p>Automated deductions for BPJS health/pension and employee loans.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14.25l6-6m4.5-3.493V21m-16.5 0V3.75a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 3.75v3.857M5.25 21h13.5M5.25 21V8.67l4.243-4.242a2.25 2.25 0 013.182 0l.13.13" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Formula-based Payroll</h4>
+                                <p>Unlimited custom components using mathematical logic for salary elements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Performance -->
+                <div id="performance" class="feature-category">
+                    <div class="category-info">
+                        <h2>Performance Management</h2>
+                        <p>Align individual execution with company vision through structured reviews and task tracking.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Performance Appraisal</h4>
+                                <p>Automated review cycles with customized scoring and feedback loops.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0c0 .634-.44 1.243-1.092 1.33a6.026 6.026 0 01-3.142 0c-.652-.087-1.092-.696-1.092-1.33v0c0-.212.029-.418.084-.612m7.332 0c.346.102.637.326.83.622.133.204.214.457.214.728V20.25a2.25 2.25 0 01-2.25 2.25h-9a2.25 2.25 0 01-2.25-2.25V5.25c0-.271.08-.524.214-.728.193-.296.484-.52.83-.622" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Task Tracking</h4>
+                                <p>Manage operational deliverables and align daily tasks with strategic goals.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Recruitment -->
+                <div id="recruitment" class="feature-category">
+                    <div class="category-info">
+                        <h2>Recruitment System</h2>
+                        <p>End-to-end talent acquisition infrastructure for the modern enterprise.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card highlight">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Dedicated Recruitment Portal</h4>
+                                <p>Custom white-label career portal to strengthen employer branding and attract top-tier talent.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375m1.875-10.333c2.624 0 4.862 1.685 5.715 4.053.813 2.255.405 4.713-1.022 6.508a5.262 5.262 0 01-5.453 1.154 5.25 5.25 0 01-3.14 3.064c-.447.165-.933.254-1.44.254H7.5V17.25h-.375c-1.449 0-2.625-1.176-2.625-2.625V8.25c0-1.449 1.176-2.625 2.625-2.625h6.75z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>Applicant Tracking (ATS)</h4>
+                                <p>Pipeline management from sourcing and screening to automated interview scheduling.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Integrations -->
+                <div id="automation" class="feature-category">
+                    <div class="category-info">
+                        <h2>Automation & Integration</h2>
+                        <p>Streamline workflows with seamless external connectivity and AI-driven insights.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-card highlight">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>WhatsApp Business Integration</h4>
+                                <p>Automated transactional notifications for payroll, leave approvals, and daily attendance logs.</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.456-2.455l.258-1.036.259 1.036a3.375 3.375 0 002.455 2.456l1.036.258-1.036.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" /></svg>
+                            </div>
+                            <div class="feature-details">
+                                <h4>AI Intelligence Core</h4>
+                                <p>Membantu analisa data tenaga kerja, pembuatan kebijakan otomatis, dan prediksi churn karyawan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function switchCategory(id) {
+            // Update tabs
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(t => {
+                t.classList.remove('active');
+                if (t.getAttribute('onclick').includes(id)) t.classList.add('active');
+            });
+
+            // Update categories
+            const current = document.querySelector('.feature-category.active');
+            const target = document.getElementById(id);
+
+            if (current === target) return;
+
+            current.style.opacity = '0';
+            current.style.transform = 'translateY(-10px)';
+
+            setTimeout(() => {
+                current.classList.remove('active');
+                target.classList.add('active');
+                
+                // Trigger animation
+                target.offsetHeight; // force reflow
+                target.style.opacity = '1';
+                target.style.transform = 'translateY(0)';
+            }, 300);
+        }
+    </script>
+</body>
+
+</html>
